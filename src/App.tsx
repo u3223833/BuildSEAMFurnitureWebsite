@@ -262,11 +262,12 @@ function Accordion({
     <div className="accordion">
       <button aria-expanded={open} onClick={() => setOpen((value) => !value)}>
         <span>{title}</span>
-        <img
-          className={open ? "plus is-open" : "plus"}
-          src="/assets/f4c92.svg"
-          alt=""
-        />
+        <span
+  className={open ? "plus is-open" : "plus"}
+  aria-hidden="true"
+>
+  +
+</span>
       </button>
       <div className={open ? "accordion-content is-open" : "accordion-content"}>
         <div>{children}</div>
