@@ -105,7 +105,11 @@ function materialFromParam(value: string | null, fallbackIndex: number) {
 }
 
 function InlineArrow() {
-  return <img className="inline-arrow" src="/assets/ab748.svg" alt="" />
+  return (
+    <span className="inline-arrow" aria-hidden="true">
+      →
+    </span>
+  )
 }
 
 function goTo(route: Route, hash = "") {
