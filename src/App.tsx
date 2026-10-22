@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react"
-import { useForm, ValidationError } from "@formspree/react"
+import { FormEvent, useEffect, useRef, useState } from "react"
 
 type Route = "/" | "/about" | "/visualiser" | "/contact"
 
@@ -961,8 +960,45 @@ function Swatches({
 }
 
 
+
 function ContactPage() {
-  const [state, handleSubmit] = useForm("mppqvnao")
+  const [submitting, setSubmitting] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState("")
+
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    const form = event.currentTarget
+
+    if (!form.checkValidity()) {
+      form.reportValidity()
+      return
+    }
+
+    setSubmitting(true)
+    setError("")
+
+    try {
+      const response = await fetch("https://formspree.io/f/mppqvnao", {
+        method: "POST",
+        body: new FormData(form),
+        headers: {
+          Accept: "application/json",
+        },
+      })
+
+      if (response.ok) {
+        setSubmitted(true)
+      } else {
+        setError("Your enquiry could not be sent. Please try again.")
+      }
+    } catch {
+      setError("Please check your internet connection and try again.")
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   return (
     <>
@@ -973,17 +1009,17 @@ function ContactPage() {
             <h1>CONTACT US.</h1>
           </div>
 
-          {state.succeeded ? (
+          {submitted ? (
             <div className="contact-success" role="status">
               <p className="eyebrow">ENQUIRY SENT</p>
               <h2>THANK YOU.</h2>
               <p>
-                Thank you for contacting SEAM. Your enquiry has
-                been submitted successfully.
+                Thank you for contacting SEAM. Your enquiry
+                has been submitted successfully.
               </p>
             </div>
           ) : (
-            <form className="contact-form" onSubmit={handleSubmit}>
+            <form className="contact-form" onSubmit={submit}>
               <h2>SEND AN ENQUIRY</h2>
 
               <input
@@ -993,14 +1029,31 @@ function ContactPage() {
               />
 
               <div className="two-fields">
-                <Field label="First Name" name="firstName" autoComplete="given-name" />
-                <Field label="Last Name" name="lastName" autoComplete="family-name" />
+                <Field
+                  label="First Name"
+                  name="firstName"
+                  autoComplete="given-name"
+                />
+                <Field
+                  label="Last Name"
+                  name="lastName"
+                  autoComplete="family-name"
+                />
               </div>
 
-              <Field label="Email" name="email" type="email" autoComplete="email" />
-              <ValidationError field="email" errors={state.errors} />
+              <Field
+                label="Email"
+                name="email"
+                type="email"
+                autoComplete="email"
+              />
 
-              <Field label="Phone" name="phone" type="tel" autoComplete="tel" />
+              <Field
+                label="Phone"
+                name="phone"
+                type="tel"
+                autoComplete="tel"
+              />
 
               <label>
                 <span className="field-label">
@@ -1015,7 +1068,11 @@ function ContactPage() {
                 </select>
               </label>
 
-              <Field label="City" name="city" autoComplete="address-level2" />
+              <Field
+                label="City"
+                name="city"
+                autoComplete="address-level2"
+              />
 
               <label>
                 <span className="field-label">
@@ -1036,14 +1093,18 @@ function ContactPage() {
                 <textarea name="description" required rows={4} />
               </label>
 
-              <ValidationError errors={state.errors} />
+              {error && (
+                <p role="alert" className="form-error">
+                  {error}
+                </p>
+              )}
 
               <button
                 className="text-link form-submit"
                 type="submit"
-                disabled={state.submitting}
+                disabled={submitting}
               >
-                {state.submitting ? "SENDING..." : "SEND ENQUIRY"}
+                {submitting ? "SENDING..." : "SEND ENQUIRY"}
               </button>
             </form>
           )}
@@ -1053,6 +1114,7 @@ function ContactPage() {
     </>
   )
 }
+
 
 
 function Field({
