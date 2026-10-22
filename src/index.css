@@ -795,9 +795,13 @@ textarea:focus {
 }
 
 .inline-arrow {
-  width: 9.80519px;
-  height: 7.36396px;
+  display: inline-block;
+  width: auto;
+  height: auto;
+  line-height: 1;
   flex: none;
+  vertical-align: middle;
+  transform: translateY(-1px);
 }
 
 .submit-link {
