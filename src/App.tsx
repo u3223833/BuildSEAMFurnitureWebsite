@@ -1,4 +1,5 @@
-import { FormEvent, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { useForm, ValidationError } from "@formspree/react"
 
 type Route = "/" | "/about" | "/visualiser" | "/contact"
 
@@ -959,12 +960,9 @@ function Swatches({
   )
 }
 
+
 function ContactPage() {
-  const [submitted, setSubmitted] = useState(false)
-  const submit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    if (event.currentTarget.checkValidity()) setSubmitted(true)
-  }
+  const [state, handleSubmit] = useForm("mppqvnao")
 
   return (
     <>
@@ -974,73 +972,78 @@ function ContactPage() {
             <p className="eyebrow">GET IN TOUCH</p>
             <h1>CONTACT US.</h1>
           </div>
-          {submitted ? (
+
+          {state.succeeded ? (
             <div className="contact-success" role="status">
-              <p className="eyebrow">FORM COMPLETE</p>
+              <p className="eyebrow">ENQUIRY SENT</p>
               <h2>THANK YOU.</h2>
               <p>
-                Your details passed validation. No backend is connected, so the
-                enquiry has not been sent.
+                Thank you for contacting SEAM. Your enquiry has
+                been submitted successfully.
               </p>
             </div>
           ) : (
-            <form className="contact-form" onSubmit={submit}>
+            <form className="contact-form" onSubmit={handleSubmit}>
               <h2>SEND AN ENQUIRY</h2>
-              <div className="two-fields">
-                <Field
-                  label="First Name"
-                  name="firstName"
-                  autoComplete="given-name"
-                />
-                <Field
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </div>
-              <Field
-                label="Email"
-                name="email"
-                type="email"
-                autoComplete="email"
+
+              <input
+                type="hidden"
+                name="_subject"
+                value="New SEAM website enquiry"
               />
+
+              <div className="two-fields">
+                <Field label="First Name" name="firstName" autoComplete="given-name" />
+                <Field label="Last Name" name="lastName" autoComplete="family-name" />
+              </div>
+
+              <Field label="Email" name="email" type="email" autoComplete="email" />
+              <ValidationError field="email" errors={state.errors} />
+
               <Field label="Phone" name="phone" type="tel" autoComplete="tel" />
+
               <label>
                 <span className="field-label">
                   Country <b aria-hidden="true">*</b>
                 </span>
                 <select name="country" required defaultValue="">
-                  <option value="" disabled>
-                    Select country
-                  </option>
+                  <option value="" disabled>Select country</option>
                   <option>Australia</option>
                   <option>United Kingdom</option>
                   <option>United States</option>
                   <option>Other</option>
                 </select>
               </label>
+
               <Field label="City" name="city" autoComplete="address-level2" />
+
               <label>
                 <span className="field-label">
                   Object of interest <b aria-hidden="true">*</b>
                 </span>
                 <select name="object" required defaultValue="">
-                  <option value="" disabled>
-                    Select object
-                  </option>
+                  <option value="" disabled>Select object</option>
                   <option>Coffee Table</option>
                   <option>Origami Lamp</option>
                   <option>General enquiry</option>
                 </select>
               </label>
+
               <label>
                 <span className="field-label">
                   Enquiry Description <b aria-hidden="true">*</b>
                 </span>
                 <textarea name="description" required rows={4} />
               </label>
-              <button className="text-link form-submit" type="submit">
-                REVIEW ENQUIRY <InlineArrow />
+
+              <ValidationError errors={state.errors} />
+
+              <button
+                className="text-link form-submit"
+                type="submit"
+                disabled={state.submitting}
+              >
+                {state.submitting ? "SENDING..." : "SEND ENQUIRY"}
               </button>
             </form>
           )}
@@ -1050,6 +1053,7 @@ function ContactPage() {
     </>
   )
 }
+
 
 function Field({
   label,
