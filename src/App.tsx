@@ -118,16 +118,18 @@ function materialFromParam(
   )
 }
 
+const assetBase = import.meta.env.BASE_URL
+
 const tableRenderImages: Record<string, string> = {
-  "Tan-White": "/assets/TAN_LEATHER_WHITE_THREAD.21.png",
-  "Tan-Black": "/assets/TAN_LEATHER_BLACK_THREAD.22.png",
-  "Tan-Natural": "/assets/TAN_LEATHER_NATURAL_TWINE.png",
-  "Olive-White": "/assets/OLIVE_LEATHER_WHITE_THREAD.25.png",
-  "Olive-Black": "/assets/OLIVE_LEATHER_BLACK_THREAD.23.png",
-  "Olive-Natural": "/assets/OLIVE_LEATHER_NATURAL_THREAD.24.png",
-  "Blue-White": "/assets/BLUE_LEATHER_WHITE_THREAD.26.png",
-  "Blue-Black": "/assets/BLUE_LEATHER_BLACK_THREAD.28.png",
-  "Blue-Natural": "/assets/BLUE_LEATHER_NATURAL_THREAD.29.png",
+  "Tan-White": `${assetBase}assets/TAN_LEATHER_WHITE_THREAD.21.png`,
+  "Tan-Black": `${assetBase}assets/TAN_LEATHER_BLACK_THREAD.22.png`,
+  "Tan-Natural": `${assetBase}assets/TAN_LEATHER_NATURAL_TWINE.png`,
+  "Olive-White": `${assetBase}assets/OLIVE_LEATHER_WHITE_THREAD.25.png`,
+  "Olive-Black": `${assetBase}assets/OLIVE_LEATHER_BLACK_THREAD.23.png`,
+  "Olive-Natural": `${assetBase}assets/OLIVE_LEATHER_NATURAL_THREAD.24.png`,
+  "Blue-White": `${assetBase}assets/BLUE_LEATHER_WHITE_THREAD.26.png`,
+  "Blue-Black": `${assetBase}assets/BLUE_LEATHER_BLACK_THREAD.28.png`,
+  "Blue-Natural": `${assetBase}assets/BLUE_LEATHER_NATURAL_THREAD.29.png`,
 }
 
 function InlineArrow() {
