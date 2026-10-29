@@ -87,21 +87,47 @@ const lampProcessSteps: ProcessStep[] = [
   },
 ]
 
-const materialColours = [
-  { name: "Slate", value: "#888880" },
-  { name: "Sand", value: "#c9b996" },
-  { name: "Ochre", value: "#c66d2a" },
-  { name: "Steel", value: "#6b7d8f" },
+type MaterialColour = {
+  name: string
+  value: string
+}
+
+const leatherColours: MaterialColour[] = [
+  { name: "Tan", value: "#b98254" },
+  { name: "Olive", value: "#65694a" },
+  { name: "Blue", value: "#526c82" },
+]
+
+const twineColours: MaterialColour[] = [
+  { name: "White", value: "#f0eee8" },
+  { name: "Black", value: "#252525" },
+  { name: "Natural", value: "#c8b18a" },
 ]
 
 type FurnitureObject = "table" | "lamp"
 
-function materialFromParam(value: string | null, fallbackIndex: number) {
+function materialFromParam(
+  value: string | null,
+  colours: MaterialColour[],
+  fallbackIndex: number,
+) {
   return (
-    materialColours.find(
+    colours.find(
       (colour) => colour.name.toLowerCase() === value?.toLowerCase(),
-    ) ?? materialColours[fallbackIndex]
+    ) ?? colours[fallbackIndex]
   )
+}
+
+const tableRenderImages: Record<string, string> = {
+  "Tan-White": "/assets/TAN_LEATHER_WHITE_THREAD.21.png",
+  "Tan-Black": "/assets/TAN_LEATHER_BLACK_THREAD.22.png",
+  "Tan-Natural": "/assets/TAN_LEATHER_NATURAL_TWINE.png",
+  "Olive-White": "/assets/OLIVE_LEATHER_WHITE_THREAD.25.png",
+  "Olive-Black": "/assets/OLIVE_LEATHER_BLACK_THREAD.23.png",
+  "Olive-Natural": "/assets/OLIVE_LEATHER_NATURAL_THREAD.24.png",
+  "Blue-White": "/assets/BLUE_LEATHER_WHITE_THREAD.26.png",
+  "Blue-Black": "/assets/BLUE_LEATHER_BLACK_THREAD.28.png",
+  "Blue-Natural": "/assets/BLUE_LEATHER_NATURAL_THREAD.29.png",
 }
 
 function InlineArrow() {
@@ -757,10 +783,10 @@ function AboutPage() {
 function VisualiserPage() {
   const initialParams = new URLSearchParams(window.location.search)
   const [leather, setLeather] = useState(() =>
-    materialFromParam(initialParams.get("leather"), 0),
+    materialFromParam(initialParams.get("leather"), leatherColours, 0),
   )
   const [twine, setTwine] = useState(() =>
-    materialFromParam(initialParams.get("twine"), 1),
+    materialFromParam(initialParams.get("twine"), twineColours, 1),
   )
   const [object, setObject] = useState<FurnitureObject>(() =>
     initialParams.get("object") === "lamp" ? "lamp" : "table",
@@ -850,11 +876,13 @@ function VisualiserPage() {
             <div className="visualiser-materials">
               <Swatches
                 label="LEATHER"
+                colours={leatherColours}
                 selected={leather.name}
                 onSelect={setLeather}
               />
               <Swatches
-                label="TWINE"
+                label="THREAD / TWINE"
+                colours={twineColours}
                 selected={twine.name}
                 onSelect={setTwine}
               />
@@ -899,18 +927,12 @@ function VisualiserPage() {
             aria-label={`${object} material preview`}
           >
             {object === "table" ? (
-              <div className="table-preview">
-                <div
-                  className="table-top"
-                  style={{ background: leather.value }}
-                />
-                <div
-                  className="table-seam"
-                  style={{ background: twine.value }}
-                />
-                <i />
-                <i />
-              </div>
+              <img
+                className="table-render-image"
+                src={tableRenderImages[`${leather.name}-${twine.name}`]}
+                alt={`SEAM coffee table in ${leather.name.toLowerCase()} leather with ${twine.name.toLowerCase()} thread`}
+                style={{ width: "100%", height: "100%", objectFit: "contain" }}
+              />
             ) : (
               <div className="lamp-preview">
                 <div
@@ -925,7 +947,9 @@ function VisualiserPage() {
               </div>
             )}
             <span className="preview-label">
-              INTERACTIVE MATERIAL PREVIEW / NOT A PRODUCT PHOTOGRAPH
+              {object === "table"
+                ? `COFFEE TABLE / ${leather.name.toUpperCase()} LEATHER / ${twine.name.toUpperCase()} THREAD`
+                : "INTERACTIVE MATERIAL PREVIEW / RENDER IMAGES NOT YET ADDED"}
             </span>
           </div>
         </section>
@@ -937,18 +961,20 @@ function VisualiserPage() {
 
 function Swatches({
   label,
+  colours,
   selected,
   onSelect,
 }: {
   label: string
+  colours: MaterialColour[]
   selected: string
-  onSelect: (colour: typeof materialColours[number]) => void
+  onSelect: (colour: MaterialColour) => void
 }) {
   return (
     <fieldset className="swatches">
       <legend>{label}</legend>
       <div>
-        {materialColours.map((colour) => (
+        {colours.map((colour) => (
           <button
             type="button"
             key={colour.name}
