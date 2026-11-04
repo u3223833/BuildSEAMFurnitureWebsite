@@ -1432,25 +1432,23 @@ function Field({
 }
 
 export default function App() {
-  const [route, setRoute] = useState<Route>(() => {
-    const path = window.location.pathname
+  const getCurrentRoute = (): Route => {
+    const base = import.meta.env.BASE_URL.replace(/\/$/, "")
+    const path = window.location.pathname.replace(base, "") || "/"
+
     return ["/about", "/visualiser", "/contact"].includes(path)
       ? path as Route
       : "/"
-  })
+  }
 
-  useEffect(() => {
-    const update = () =>
-      setRoute(
-        (["/about", "/visualiser", "/contact"].includes(
-          window.location.pathname,
-        )
-          ? window.location.pathname
-          : "/") as Route,
-      )
-    window.addEventListener("popstate", update)
-    return () => window.removeEventListener("popstate", update)
-  }, [])
+  const [route, setRoute] = useState<Route>(getCurrentRoute)
+
+ useEffect(() => {
+  const update = () => setRoute(getCurrentRoute())
+
+  window.addEventListener("popstate", update)
+  return () => window.removeEventListener("popstate", update)
+}, [])
 
   useEffect(() => {
     document.title =
