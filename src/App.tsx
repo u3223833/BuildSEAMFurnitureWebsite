@@ -102,7 +102,8 @@ function InlineArrow() {
 }
 
 function goTo(route: Route, hash = "") {
-  window.history.pushState({}, "", `${route}${hash}`)
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "")
+  window.history.pushState({}, "", `${base}${route}${hash}`)
   window.dispatchEvent(new PopStateEvent("popstate"))
   window.scrollTo({ top: 0, behavior: "smooth" })
 }
