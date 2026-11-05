@@ -1,4 +1,10 @@
-import { FormEvent, useEffect, useRef, useState } from "react"
+import {
+  useState,
+  useEffect,
+  useRef,
+  type FormEvent,
+  type ReactNode,
+} from "react";
 
 type Route = "/" | "/about" | "/visualiser" | "/contact"
 
@@ -245,7 +251,7 @@ function Accordion({
   children,
 }: {
   title: string
-  children: React.ReactNode
+children: ReactNode
 }) {
   const [open, setOpen] = useState(false)
   return (
@@ -702,51 +708,9 @@ To be used as a stand for reading large coffee table books in a cosy lounge room
   )
 }
 
-const principles = [
-  {
-    title: "MATERIAL HONESTY",
-    copy: "Let the qualities of each material remain visible.",
-  },
-  {
-    title: "CONSIDERED MAKING",
-    copy: "Make construction part of the design.",
-  },
-  {
-    title: "QUESTION CONVENTION",
-    copy: "Explore alternatives to familiar forms.",
-  },
-  {
-    title: "DESIGN WITH INTENTION",
-    copy: "Make deliberate choices about form, function and detail.",
-  },
-  {
-    title: "DESIGNED FOR LONGEVITY",
-    copy: "Create objects that are made to be kept.",
-  },
-]
 
 
-function PrinciplesAccordion() {
-  return (
-    <div className="approach-accordion">
-      {principles.map((principle, index) => (
-        <article className="approach-item" key={principle.title}>
-          <div className="approach-trigger">
-            <span className="approach-number">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-            <span className="approach-title">
-              {principle.title}
-            </span>
-          </div>
-          <p className="approach-content">
-            {principle.copy}
-          </p>
-        </article>
-      ))}
-    </div>
-  )
-}
+
 
 
 const team = [
@@ -772,6 +736,190 @@ const team = [
       "Designed and developed the SEAM website, creating a digital experience that showcases the collection, its craftsmanship and material customisation.",
   },
 ]
+const principles = [
+  {
+    title: "MATERIAL HONESTY",
+    description: "Let the qualities of each material remain visible.",
+  },
+  {
+    title: "CONSIDERED MAKING",
+    description: "Make construction part of the design.",
+  },
+  {
+    title: "QUESTION CONVENTION",
+    description: "Explore alternatives to familiar forms.",
+  },
+  {
+    title: "DESIGN WITH INTENTION",
+    description: "Make deliberate choices about form, function and detail.",
+  },
+  {
+    title: "DESIGNED FOR LONGEVITY",
+    description: "Create objects that are made to be kept.",
+  },
+];
+
+const processVideos = [
+  {
+    src: "cnc.mp4",
+    title: "CNC DRILLING",
+    description: "Precision through contemporary manufacturing.",
+  },
+  {
+    src: "hole.mp4",
+    title: "HOLE PUNCHING",
+    description: "Preparing the materials for connection.",
+  },
+  {
+    src: "sand.mp4",
+    title: "SANDING",
+    description: "Refining the surface through hand finishing.",
+  },
+  {
+    src: "sew.mp4",
+    title: "HAND-SEWING",
+    description: "Bringing the materials together through craft.",
+  },
+];
+
+
+function MakingCarousel() {
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Detect when the carousel enters the screen
+  useEffect(() => {
+    const element = carouselRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.25 }
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Only play the active video while the carousel is visible
+  useEffect(() => {
+    const videos = trackRef.current?.querySelectorAll("video");
+    if (!videos) return;
+
+    videos.forEach((video, index) => {
+      if (index === activeIndex && isVisible) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
+  }, [activeIndex, isVisible]);
+
+  // Update the active video when the user swipes
+  const handleScroll = () => {
+    const container = trackRef.current;
+    if (!container) return;
+
+    const index = Math.round(
+      container.scrollLeft / container.clientWidth
+    );
+
+    setActiveIndex(index);
+  };
+
+  // Navigate between videos
+  const goToVideo = (index: number) => {
+    const container = trackRef.current;
+    if (!container) return;
+
+    const nextIndex =
+      (index + processVideos.length) % processVideos.length;
+
+    container.scrollTo({
+      left: nextIndex * container.clientWidth,
+      behavior: "smooth",
+    });
+
+    setActiveIndex(nextIndex);
+  };
+
+  // Automatically move forward when a video finishes
+  const handleVideoEnd = () => {
+    goToVideo(activeIndex + 1);
+  };
+
+  return (
+    <div className="making-carousel" ref={carouselRef}>
+      <div
+        className="making-carousel-track"
+        ref={trackRef}
+        onScroll={handleScroll}
+      >
+        {processVideos.map((video, index) => (
+          <div className="making-slide" key={video.src}>
+            <video
+              muted
+              playsInline
+              preload="metadata"
+              onEnded={handleVideoEnd}
+            >
+              <source
+                src={`${import.meta.env.BASE_URL}assets/${video.src}`}
+                type="video/mp4"
+              />
+            </video>
+
+            <div className="making-slide-caption">
+              <p className="making-slide-title">{video.title}</p>
+              <p className="making-slide-description">
+                {video.description}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="making-carousel-footer">
+        <button
+          className="making-nav-button"
+          onClick={() => goToVideo(activeIndex - 1)}
+          aria-label="Previous video"
+          type="button"
+        >
+          PREVIOUS
+        </button>
+
+        <div className="making-progress">
+          <div
+            className="making-progress-fill"
+            style={{
+              width: `${((activeIndex + 1) / processVideos.length) * 100}%`,
+            }}
+          />
+        </div>
+
+        <span className="making-counter">
+          {String(activeIndex + 1).padStart(2, "0")} / 04
+        </span>
+
+        <button
+          className="making-nav-button"
+          onClick={() => goToVideo(activeIndex + 1)}
+          aria-label="Next video"
+          type="button"
+        >
+          NEXT
+        </button>
+      </div>
+    </div>
+  );
+}
+
 
 function AboutPage() {
   return (
@@ -789,42 +937,67 @@ function AboutPage() {
               SEAM is a furniture collection developed by University of Canberra 
               design students in collaboration with Miko Designs for the 2026 Craft + 
               Design Canberra Festival.
-
+              
               Responding to the theme of Dissent, the collection explores new ways of 
               making by bringing together traditional craft techniques and contemporary 
               manufacturing. Through two complementary objects, a coffee table and reading 
               lamp, SEAM challenges the boundaries between the industrial and the handmade.
             </p>
           </div>
-          <Placeholder label="STUDIO STORY" />
-        </section>
-        <section className="about-approach">
-          <div className="approach-intro">
-            <p className="eyebrow">02 / OUR APPROACH</p>
-            <h2>
-              WHAT
-              <br />
-              GUIDES
-              <br />
-              OUR MAKING.
-            </h2>
-            <p>
-              We believe design is a conversation between material, form and
-              function. By bringing together traditional craft and contemporary
-              manufacturing, SEAM explores new ways of making, where
-              construction, material and detail become part of the design.
-            </p>
-          </div>
-
-          <div className="approach-principles">
-            <PrinciplesAccordion />
-          </div>
-
-
+          <div className="about-story-image">
+  <img
+    src={`${import.meta.env.BASE_URL}assets/ourstory.png`}
+    alt="SEAM furniture collection and design process"
+  />
+</div>
         </section>
        
+     <section className="about-making">
+
+  <div className="approach-intro">
+    <p className="eyebrow">03 / THE MAKING</p>
+
+    <h2>
+      A QUESTION
+      <br />
+      OF MAKING.
+    </h2>
+
+    <p>
+      SEAM began with a question: does using traditional manufacturing techniques alongside the
+      capabilities of modern manufacturing detract from the artistic integrity of the work?
+
+      <br /><br />
+
+      Drawing on the principles of folding and sewing, we explored how aluminium could be shaped
+      into organic forms and joined through an unconventional sewing technique.
+      Aluminium, leather and twine bring the collection together.
+      CNC machining and laser cutting provide precision,
+      while hand-sewing introduces a human element.
+      Rather than concealing the construction, the joining method becomes part of the
+      object's identity.
+
+      <br /><br />
+
+      Through material efficiency, visible construction and repairability,
+      SEAM explores the potential for objects to endure.
+      At its core, the collection considers how technological
+      precision and human intervention can come together to create something lasting.
+    </p>
+  </div>
+
+  <MakingCarousel />
+
+</section>
+        
+
+            
+        
+          
+
+       
         <section className="team">
-          <p className="eyebrow">05 / THE PEOPLE</p>
+          <p className="eyebrow">04 / THE PEOPLE</p>
           <div className="team-heading">
             <h2>THE TEAM</h2>
             <p>
