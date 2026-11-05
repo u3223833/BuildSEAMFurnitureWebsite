@@ -413,10 +413,10 @@ function ProductSection({
       const slides =
     id === "coffee-table"
       ? [
-        { label: "LOW PERSPECTIVE", image: "PERSPECTIVE_VIEW_LOW.png" },
-          { label: "SIDE VIEW", image: "SIDE_VIEW.png" },
-          { label: "FRONT VIEW", image: "FRONT_VIEW.png" },
-          { label: "ALTERNATE FRONT VIEW", image: "FRONT_VIEW_2.png" },
+        { label: "LOW PERSPECTIVE", image: "main.png" },
+          { label: "SIDE VIEW", image: "front.png" },
+          { label: "FRONT VIEW", image: "side.png" },
+          { label: "ALTERNATE FRONT VIEW", image: "birdseye.png" },
         ]
       : [
           { label: "FULL PRODUCT VIEW" },
@@ -556,259 +556,87 @@ function ProcessCarousel({
   )
 }
 
-const coffeeMakingVideos = [
-  { title: "CNC DRILLING", file: "CNC_drill.MOV", detail: "Precision machining of the aluminium components." },
-  { title: "CUTTING LEATHER", file: "cutting leather.MOV", detail: "Preparing the leather pieces for the table." },
-  { title: "FORMING LEATHER", file: "forming leather.MOV", detail: "Shaping the leather around the structure." },
-  { title: "HOLE PUNCHING", file: "hole punching.MOV", detail: "Preparing each stitch point by hand." },
-  { title: "LEATHER CHAMFER", file: "leather chamfer.MOV", detail: "Refining the edges of the leather." },
-  { title: "CHAMFERING", file: "CHAMFER.MOV", detail: "Finishing the aluminium edge detail." },
-  { title: "SANDING", file: "Sanding.MOV", detail: "Smoothing and finishing the components." },
-  { title: "SOAKING LEATHER", file: "soaking leather.MOV", detail: "Preparing the leather before it is formed." },
-  { title: "HAND STITCHING 01", file: "sewing 1.MOV", detail: "The leather is stitched into the aluminium structure." },
-  { title: "HAND STITCHING 02", file: "sewing 2.MOV", detail: "Continuing the hand-sewn construction." },
-  { title: "HAND STITCHING 03", file: "sewing 3.MOV", detail: "Bringing the leather details together." },
-]
-
-
-
-function MakingVideoCarousel() {
+function CoffeeTableProcessGallery() {
   const trackRef = useRef<HTMLDivElement>(null)
-  const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
-  const scrollSettleTimerRef = useRef<number | null>(null)
-  const activeRef = useRef(0)
-
   const [active, setActive] = useState(0)
-  const [isVisible, setIsVisible] = useState(false)
 
-  // Centre the selected video in the carousel.
-  const centreCard = (
-    index: number,
-    behavior: ScrollBehavior = "smooth",
-  ) => {
-    const track = trackRef.current
-    const cards = track?.querySelectorAll<HTMLElement>(
-      ".making-video-card",
-    )
-    const card = cards?.[index]
+  const images = [
+    "pressing.jpeg",
+    "edge.jpeg",
+    "assembled.jpeg",
+    "fitted.jpeg",
+    "clamped.jpeg",
+    "clamped2.jpeg",
+    "stitch.jpeg",
+    "stiched1.jpeg",
+  ]
 
-    if (!track || !card) return
+  const maxIndex = images.length - 3
 
-    const trackCentre =
-      track.getBoundingClientRect().left + track.clientWidth / 2
-
-    const cardCentre =
-      card.getBoundingClientRect().left + card.clientWidth / 2
-
-    track.scrollTo({
-      left: track.scrollLeft + (cardCentre - trackCentre),
-      behavior,
-    })
-  }
-
-  // Find whichever video is closest to the centre after a swipe.
-  const updateActiveVideo = () => {
+  const moveTo = (index: number) => {
+    const next = Math.max(0, Math.min(index, maxIndex))
     const track = trackRef.current
     if (!track) return
 
-    const cards = Array.from(
-      track.querySelectorAll<HTMLElement>(".making-video-card"),
-    )
+    const slide = track.children[next] as HTMLElement
 
-    if (!cards.length) return
-
-    const trackCentre =
-      track.getBoundingClientRect().left + track.clientWidth / 2
-
-    let closestIndex = 0
-    let closestDistance = Infinity
-
-    cards.forEach((card, index) => {
-      const cardCentre =
-        card.getBoundingClientRect().left + card.clientWidth / 2
-
-      const distance = Math.abs(trackCentre - cardCentre)
-
-      if (distance < closestDistance) {
-        closestDistance = distance
-        closestIndex = index
-      }
+    track.scrollTo({
+      left: slide.offsetLeft - track.offsetLeft,
+      behavior: "smooth",
     })
 
-    activeRef.current = closestIndex
-    setActive(closestIndex)
+    setActive(next)
   }
 
-  // Wait until the user finishes swiping before changing the active video.
-  const handleTrackScroll = () => {
-    if (scrollSettleTimerRef.current !== null) {
-      window.clearTimeout(scrollSettleTimerRef.current)
-    }
-
-    scrollSettleTimerRef.current = window.setTimeout(() => {
-      updateActiveVideo()
-      scrollSettleTimerRef.current = null
-    }, 180)
-  }
-
-  // Move to the next video automatically when the current one finishes.
-  const goToNext = (index: number) => {
-    const next = (index + 1) % coffeeMakingVideos.length
-    const track = trackRef.current
-
-    if (index === coffeeMakingVideos.length - 1) {
-      track?.scrollTo({
-        left: 0,
-        behavior: "smooth",
-      })
-      return
-    }
-
-    centreCard(next, "smooth")
-  }
-
-  // Detect when the carousel is visible on screen.
   useEffect(() => {
-    const section = trackRef.current?.closest(".making-videos")
-    if (!section) return
+    const timer = window.setInterval(() => {
+      moveTo(active >= maxIndex ? 0 : active + 1)
+    }, 4500)
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(
-          entry.isIntersecting && entry.intersectionRatio > 0.2,
-        )
-      },
-      { threshold: [0, 0.2, 0.5] },
-    )
-
-    observer.observe(section)
-
-    return () => observer.disconnect()
-  }, [])
-
-  // Centre the first video when the carousel loads.
-  useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
-      centreCard(0, "auto")
-    })
-
-    return () => window.cancelAnimationFrame(frame)
-  }, [])
-
-  // Only the video in the centre plays.
-  useEffect(() => {
-    videoRefs.current.forEach((video, index) => {
-      if (!video) return
-
-      if (index !== active || !isVisible || document.hidden) {
-        video.pause()
-        return
-      }
-
-      if (video.ended) {
-        video.currentTime = 0
-      }
-
-      video.play().catch(() => {
-        // Keep the carousel usable if autoplay is blocked.
-      })
-    })
-  }, [active, isVisible])
-
-  // Pause videos when the browser tab is hidden.
-  useEffect(() => {
-    const handleVisibility = () => {
-      if (document.hidden) {
-        videoRefs.current.forEach((video) => video?.pause())
-      } else if (isVisible) {
-        videoRefs.current[activeRef.current]?.play().catch(() => {})
-      }
-    }
-
-    document.addEventListener("visibilitychange", handleVisibility)
-
-    return () => {
-      document.removeEventListener(
-        "visibilitychange",
-        handleVisibility,
-      )
-
-      if (scrollSettleTimerRef.current !== null) {
-        window.clearTimeout(scrollSettleTimerRef.current)
-      }
-    }
-  }, [isVisible])
-
-  // Automatically advance when the active video finishes.
-  const handleVideoEnd = (index: number) => {
-    if (index === activeRef.current) {
-      goToNext(index)
-    }
-  }
+    return () => window.clearInterval(timer)
+  }, [active, maxIndex])
 
   return (
-    <section
-      className="making-videos"
-      id="coffee-table-process"
-    >
-      <div className="making-videos-heading">
-        <div>
-          <p className="eyebrow">
-            03 / COFFEE TABLE MAKING PROCESS
-          </p>
-          <h2>
-            MADE BY HAND.<br />
-            MADE WITH INTENTION.
-          </h2>
-        </div>
+    <section className="process-gallery">
+      <div className="process-gallery-heading">
+  <p className="eyebrow">03 / THE MAKING</p>
+  <h2>FROM MATERIAL TO FORM.</h2>
+  <p>
+    An exploration of the processes, materials and details
+    behind the SEAM coffee table.
+  </p>
+</div>
 
-        <p className="making-videos-intro">
-          A closer look at the processes behind SEAM — from machining
-          and material preparation to the hand-stitched details.
-        </p>
+      <div className="process-gallery-track" ref={trackRef}>
+        {images.map((image, index) => (
+          <div className="process-gallery-slide" key={image}>
+            <img
+              src={`${import.meta.env.BASE_URL}assets/${image}`}
+              alt={`Coffee table making process ${index + 1}`}
+              loading="lazy"
+            />
+          </div>
+        ))}
       </div>
 
-      <div
-        className="making-videos-track"
-        ref={trackRef}
-        onScroll={handleTrackScroll}
-        role="region"
-        aria-label="Swipe through the coffee table making process"
-      >
-        {coffeeMakingVideos.map((video, index) => (
-          <article
-            className={`making-video-card${
-              index === active ? " is-active" : ""
-            }`}
-            key={video.file}
-          >
-            <div className="making-video-frame">
-              <video
-                ref={(element) => {
-                  videoRefs.current[index] = element
-                }}
-                src={`${import.meta.env.BASE_URL}assets/${video.file}`}
-                muted
-                playsInline
-                preload="metadata"
-                onEnded={() => handleVideoEnd(index)}
-                aria-label={`${video.title.toLowerCase()} process video`}
-              />
+      <div className="process-gallery-controls">
+        <span>
+          {String(active + 1).padStart(2, "0")} /{" "}
+          {String(maxIndex + 1).padStart(2, "0")}
+        </span>
 
-      
-            </div>
-
-            <div className="making-video-caption">
-              <h3>{video.title}</h3>
-              <p>{video.detail}</p>
-            </div>
-          </article>
-        ))}
+        <div>
+          <button onClick={() => moveTo(active - 1)} aria-label="Previous images">
+            ←
+          </button>
+          <button onClick={() => moveTo(active + 1)} aria-label="Next images">
+            →
+          </button>
+        </div>
       </div>
     </section>
   )
 }
-
 
 function HomePage() {
   return (
@@ -816,7 +644,7 @@ function HomePage() {
       <section className="hero">
         <img
           className="hero-image"
-          src={`${import.meta.env.BASE_URL}assets/CLOSE_UP_CORNER.png`}
+          src={`${import.meta.env.BASE_URL}assets/hero.png`}
           alt="Close-up of the SEAM coffee table showing the leather and aluminium corner detail"
           fetchPriority="high"
         />
@@ -837,37 +665,13 @@ function HomePage() {
             COLLECTION.
           </h2>
           <p className="collection-intro">
-            The SEAM collection explores the relationship between material,
-            structure, and form through two contemporary furniture objects. Each
-            piece brings together contrasting elements to create a considered
-            balance between function and expression.
+           Developed in response to the theme of Dissent for the 2026 Craft + Design Canberra 
+           Festival, the collection explores the relationship between traditional craft and 
+           contemporary production. It questions where the role of the maker ends and the 
+           role of the machine begins, and whether bringing the two together can create 
+           new ways of making.
           </p>
-          <div className="collection-grid">
-            <article>
-              <Placeholder
-                label="COFFEE TABLE / LANDSCAPE"
-                className="landscape"
-              />
-              <div className="object-caption">
-                <span>01 — COFFEE TABLE</span>
-                <a href="#coffee-table" className="text-link">
-                  EXPLORE <InlineArrow />
-                </a>
-              </div>
-            </article>
-            <article>
-              <Placeholder
-                label="ORIGAMI LAMP / PORTRAIT"
-                className="portrait"
-              />
-              <div className="object-caption">
-                <span>02 — ORIGAMI LAMP</span>
-                <a href="#origami-lamp" className="text-link">
-                  EXPLORE <InlineArrow />
-                </a>
-              </div>
-            </article>
-          </div>
+          
         </section>
         <ProductSection
           id="coffee-table"
@@ -882,7 +686,8 @@ manufacturing.
 To be used as a stand for reading large coffee table books in a cosy lounge room.
 "
         />
-        {/* <MakingVideoCarousel /> */}
+       <CoffeeTableProcessGallery />
+
         <ProductSection
           id="origami-lamp"
           sectionNumber="04 / OBJECT 02"
@@ -1200,19 +1005,21 @@ useEffect(() => setShareState("idle"), [leather, twine])
               </div>
             </div>
           </div>
-          <div
+  <div
   className="visualiser-canvas"
   aria-label="Coffee table material preview"
 >
-  <img
-    className="table-render-image"
-    src={tableRenderImages[`${leather.name}-${twine.name}`]}
-    alt={`SEAM coffee table in ${leather.name.toLowerCase()} leather with ${twine.name.toLowerCase()} thread`}
-  />
+  <div className="visualiser-render-frame">
+    <img
+      className="table-render-image"
+      src={tableRenderImages[`${leather.name}-${twine.name}`]}
+      alt={`SEAM coffee table in ${leather.name.toLowerCase()} leather with ${twine.name.toLowerCase()} thread`}
+    />
 
-  <span className="preview-label">
-    {`COFFEE TABLE / ${leather.name.toUpperCase()} LEATHER / ${twine.name.toUpperCase()} THREAD`}
-  </span>
+    <span className="preview-label">
+      {`COFFEE TABLE / ${leather.name.toUpperCase()} LEATHER / ${twine.name.toUpperCase()} THREAD`}
+    </span>
+  </div>
 </div>
         </section>
       </main>
@@ -1352,7 +1159,12 @@ function ContactPage() {
                 <span className="field-label">
                   Country <b aria-hidden="true">*</b>
                 </span>
-                <select name="country" required defaultValue="">
+                <select
+  name="country"
+  autoComplete="country-name"
+  required
+  defaultValue=""
+>
                   <option value="" disabled>Select country</option>
                   <option>Australia</option>
                   <option>United Kingdom</option>
@@ -1371,7 +1183,12 @@ function ContactPage() {
                 <span className="field-label">
                   Object of interest <b aria-hidden="true">*</b>
                 </span>
-                <select name="object" required defaultValue="">
+                <select
+  name="object"
+  autoComplete="off"
+  required
+  defaultValue=""
+>
                   <option value="" disabled>Select object</option>
                   <option>Coffee Table</option>
                   <option>Origami Lamp</option>
