@@ -220,7 +220,7 @@ function Footer() {
           >
             SEAM
           </button>
-          <span>MIKO DESIGNS</span>
+          <span>UC × MIKO DESIGNS</span>
         </div>
         <div className="footer-group">
           <p>EXPLORE</p>
@@ -233,11 +233,16 @@ function Footer() {
         <div className="footer-group">
           <p>GET IN TOUCH</p>
           <button onClick={() => navigate("/contact")}>CONTACT US</button>
-          <button onClick={() => navigate("/contact")}>MAKE AN ENQUIRY</button>
+          <button
+  className="editorial-link"
+  onClick={() => navigate("/contact")}
+>
+  MAKE AN ENQUIRY <span>↗</span>
+</button>
         </div>
       </div>
       <div className="footer-bottom">
-        <span>© SEAM — MIKO DESIGNS</span>
+        <span>© SEAM — UC × MIKO DESIGNS</span>
         <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
           BACK TO TOP ↑
         </button>
@@ -424,12 +429,11 @@ function ProductSection({
           { label: "FRONT VIEW", image: "side.png" },
           { label: "ALTERNATE FRONT VIEW", image: "birdseye.png" },
         ]
-      : [
-          { label: "FULL PRODUCT VIEW" },
-          { label: "FOLDED CONSTRUCTION DETAIL" },
-          { label: "MATERIAL / FINISH CLOSE-UP" },
-          { label: "ALTERNATE ANGLE" },
-        ]
+     : [
+      { label: "SIDE VIEW", image: "lampside.png" },
+      { label: "FRONT VIEW", image: "lampfront.png" },
+    { label: "TOP VIEW", image: "lamptop.png" },
+  ]
 
   return (
     <section id={id} className={reverse ? "product reverse" : "product"}>
@@ -439,7 +443,7 @@ function ProductSection({
         <h2>{title}</h2>
         <p>{description}</p>
         
-        <div className="accordions">
+               <div className="accordions">
           <Accordion title="MATERIALS">
             <MaterialDetails materials={materials} />
           </Accordion>
@@ -449,6 +453,15 @@ function ProductSection({
               : "400mm x 800mm x 420mm"}
           </Accordion>
         </div>
+
+        {id === "coffee-table" && (
+          <a
+            href={`${import.meta.env.BASE_URL}visualiser`}
+            className="make-your-own-link"
+          >
+            MAKE IT YOUR OWN <span>↗</span>
+          </a>
+        )}
       </div>
     </section>
   )
@@ -561,18 +574,170 @@ function ProcessCarousel({
     </section>
   )
 }
+function CoffeeLifestyleGallery() {
+  const images = [
+    {
+      image: "fullview.png",
+      alt: "SEAM coffee table in a living room",
+    },
+    {
+      image: "openbook.png",
+      alt: "SEAM coffee table styled with an open book",
+    },
+    {
+      image: "closeup1.png",
+      alt: "SEAM coffee table detail",
+    },
+  ];
 
+  const [active, setActive] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  const showSlide = (index: number) => {
+    const next = (index + images.length) % images.length;
+    setActive(next);
+    trackRef.current?.scrollTo({
+      left: next * trackRef.current.clientWidth,
+      behavior: "smooth",
+    });
+  };
+
+  return (
+  <section className="coffee-lifestyle-gallery">
+      <div
+        className="coffee-lifestyle-track"
+        ref={trackRef}
+        onScroll={(event) => {
+          const track = event.currentTarget;
+          if (track.clientWidth) {
+            setActive(
+              Math.round(track.scrollLeft / track.clientWidth)
+            );
+          }
+        }}
+      >
+        {images.map((item) => (
+          <div className="coffee-lifestyle-slide" key={item.image}>
+            <img
+              src={`${import.meta.env.BASE_URL}assets/${item.image}`}
+              alt={item.alt}
+            />
+          </div>
+        ))}
+      </div>
+
+      <button
+        className="coffee-lifestyle-arrow previous"
+        onClick={() => showSlide(active - 1)}
+        aria-label="Previous image"
+      >
+        ←
+      </button>
+
+      <button
+        className="coffee-lifestyle-arrow next"
+        onClick={() => showSlide(active + 1)}
+        aria-label="Next image"
+      >
+        →
+      </button>
+
+      <span className="coffee-lifestyle-counter">
+        {String(active + 1).padStart(2, "0")} /{" "}
+        {String(images.length).padStart(2, "0")}
+      </span>
+    </section>
+  );
+}
+function LampLifestyleGallery() {
+  const images = [
+    {
+      image: "lifestyle1.jpeg",
+      alt: "Origami Lamp lifestyle view",
+    },
+    {
+      image: "lifestyle4.jpeg",
+      alt: "Origami Lamp lifestyle view",
+    },
+    {
+      image: "lifestyle3.jpeg",
+      alt: "Origami Lamp lifestyle view",
+    },
+  ];
+
+  const [active, setActive] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  const showSlide = (index: number) => {
+    const next = (index + images.length) % images.length;
+    setActive(next);
+    trackRef.current?.scrollTo({
+      left: next * trackRef.current.clientWidth,
+      behavior: "smooth",
+    });
+  };
+
+  return (
+    <section className="coffee-lifestyle-gallery lamp-lifestyle-gallery">
+      <div
+        className="coffee-lifestyle-track"
+        ref={trackRef}
+        onScroll={(event) => {
+          const track = event.currentTarget;
+          if (track.clientWidth) {
+            setActive(Math.round(track.scrollLeft / track.clientWidth));
+          }
+        }}
+      >
+        {images.map((item) => (
+          <div className="coffee-lifestyle-slide" key={item.image}>
+            <img
+              src={`${import.meta.env.BASE_URL}assets/${item.image}`}
+              alt={item.alt}
+            />
+          </div>
+        ))}
+      </div>
+
+      <button
+        className="coffee-lifestyle-arrow previous"
+        onClick={() => showSlide(active - 1)}
+        aria-label="Previous image"
+      >
+        ←
+      </button>
+
+      <button
+        className="coffee-lifestyle-arrow next"
+        onClick={() => showSlide(active + 1)}
+        aria-label="Next image"
+      >
+        →
+      </button>
+
+      <span className="coffee-lifestyle-counter">
+        {String(active + 1).padStart(2, "0")} /{" "}
+        {String(images.length).padStart(2, "0")}
+      </span>
+    </section>
+  );
+}
 function CoffeeTableProcessGallery() {
   const trackRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(0)
 
   const images = [
     "pressing.jpeg",
+    "presslamp.jpeg",
+    "presslamp2.jpeg",
     "edge.jpeg",
     "assembled.jpeg",
+    "assemble.jpeg",
+    "lamp.jpeg",
     "fitted.jpeg",
     "clamped.jpeg",
     "clamped2.jpeg",
+    "sewlamp.jpeg",
     "stitch.jpeg",
     "stiched1.jpeg",
   ]
@@ -605,11 +770,10 @@ function CoffeeTableProcessGallery() {
   return (
     <section className="process-gallery">
       <div className="process-gallery-heading">
-  <p className="eyebrow">03 / THE MAKING</p>
+  <p className="eyebrow">02 / THE PHILOSOPHY</p>
   <h2>FROM MATERIAL TO FORM.</h2>
   <p>
-    An exploration of the processes, materials and details
-    behind the SEAM coffee table.
+    An exploration of the materials, processes and construction techniques that inform the SEAM collection.
   </p>
 </div>
 
@@ -625,21 +789,39 @@ function CoffeeTableProcessGallery() {
         ))}
       </div>
 
-      <div className="process-gallery-controls">
-        <span>
-          {String(active + 1).padStart(2, "0")} /{" "}
-          {String(maxIndex + 1).padStart(2, "0")}
-        </span>
+     <div className="making-carousel-footer">
+  <button
+    className="making-nav-button"
+    onClick={() => moveTo(active - 1)}
+    aria-label="Previous images"
+    type="button"
+  >
+    PREVIOUS
+  </button>
 
-        <div>
-          <button onClick={() => moveTo(active - 1)} aria-label="Previous images">
-            ←
-          </button>
-          <button onClick={() => moveTo(active + 1)} aria-label="Next images">
-            →
-          </button>
-        </div>
-      </div>
+  <div className="making-progress">
+    <div
+      className="making-progress-fill"
+      style={{
+        width: `${((active + 1) / (maxIndex + 1)) * 100}%`,
+      }}
+    />
+  </div>
+
+  <span className="making-counter">
+    {String(active + 1).padStart(2, "0")} /{" "}
+    {String(maxIndex + 1).padStart(2, "0")}
+  </span>
+
+  <button
+    className="making-nav-button"
+    onClick={() => moveTo(active + 1)}
+    aria-label="Next images"
+    type="button"
+  >
+    NEXT
+  </button>
+</div>
     </section>
   )
 }
@@ -664,7 +846,7 @@ function HomePage() {
 
       <main>
         <section className="collection" id="collection">
-          <p className="eyebrow">01 / THE COLLECTION</p>
+          <p className="eyebrow">COLLECTION</p>
           <h2>
             THE
             <br />
@@ -681,7 +863,7 @@ function HomePage() {
         </section>
         <ProductSection
           id="coffee-table"
-          sectionNumber="02 / OBJECT 01"
+          sectionNumber="OBJECT #01"
           title="COFFEE TABLE"
           description="
 Thick bridal leather sewn through folded aluminium to create an 
@@ -692,16 +874,17 @@ manufacturing.
 To be used as a stand for reading large coffee table books in a cosy lounge room.
 "
         />
-       <CoffeeTableProcessGallery />
+<CoffeeLifestyleGallery />
+
 
         <ProductSection
           id="origami-lamp"
-          sectionNumber="04 / OBJECT 02"
+          sectionNumber="OBJECT #02"
           title="ORIGAMI LAMP"
           reverse
-          description="A sculptural reading light whose folded profile directs light while revealing its method of construction."
+          description="Inspired by the traditional art of origami, this reading lamp transforms folded aluminium into a sculptural form that balances light and function. Combining contemporary manufacturing with traditional craft techniques, its considered structure creates adaptable ambient and focused reading light. Visible folds and material details celebrate the beauty of its construction."
         />
-        
+        <LampLifestyleGallery />
       </main>
       <Footer />
     </>
@@ -715,21 +898,21 @@ To be used as a stand for reading large coffee table books in a cosy lounge room
 
 const team = [
   {
-    name: "JOHNNY",
+    name: "JONATHAN CHARTON",
     role: "INDUSTRIAL DESIGNER",
     image: "1.png",
     description:
       "Developed the Origami Lamp, exploring folded form, materiality and the relationship between structure and light.",
   },
   {
-    name: "OSCAR",
+    name: "OSCAR SENDEN",
     role: "INDUSTRIAL DESIGNER",
     image: "2.png",
     description:
       "Designed the SEAM coffee table, bringing together aluminium and leather through considered construction and hand-finished details.",
   },
   {
-    name: "GRACE",
+    name: "GRACE SCOTT",
     role: "UX/UI DESIGNER",
     image: "3.png",
     description:
@@ -937,7 +1120,7 @@ function AboutPage() {
               SEAM is a furniture collection developed by University of Canberra 
               design students in collaboration with Miko Designs for the 2026 Craft + 
               Design Canberra Festival.
-              
+              <br /><br />
               Responding to the theme of Dissent, the collection explores new ways of 
               making by bringing together traditional craft techniques and contemporary 
               manufacturing. Through two complementary objects, a coffee table and reading 
@@ -951,6 +1134,8 @@ function AboutPage() {
   />
 </div>
         </section>
+
+        <CoffeeTableProcessGallery />
        
      <section className="about-making">
 
@@ -964,25 +1149,20 @@ function AboutPage() {
     </h2>
 
     <p>
-      SEAM began with a question: does using traditional manufacturing techniques alongside the
-      capabilities of modern manufacturing detract from the artistic integrity of the work?
+      <strong>SEAM began with a question: does using traditional manufacturing techniques alongside the
+      capabilities of modern manufacturing detract from the artistic integrity of the work?</strong>
 
-      <br /><br />
+      <br /> <br />
 
-      Drawing on the principles of folding and sewing, we explored how aluminium could be shaped
-      into organic forms and joined through an unconventional sewing technique.
-      Aluminium, leather and twine bring the collection together.
-      CNC machining and laser cutting provide precision,
-      while hand-sewing introduces a human element.
-      Rather than concealing the construction, the joining method becomes part of the
-      object's identity.
-
-      <br /><br />
-
-      Through material efficiency, visible construction and repairability,
-      SEAM explores the potential for objects to endure.
-      At its core, the collection considers how technological
-      precision and human intervention can come together to create something lasting.
+      Drawing on the principles of folding and sewing, the collection explores how traditional craft techniques can be reinterpreted through contemporary 
+      materials and manufacturing processes. 
+      Aluminium is shaped into considered forms 
+      through precision CNC machining and laser cutting, 
+      while hand-sewing and material connections introduce a human element. 
+      Rather than concealing the construction, the folds, joins and making processes 
+      become part of each object's identity. 
+      
+      <br /> The collection considers how technological precision and human intervention can come together to create something lasting.
     </p>
   </div>
 
@@ -1001,7 +1181,9 @@ function AboutPage() {
           <div className="team-heading">
             <h2>THE TEAM</h2>
             <p>
-              THREE DESIGNERS. ONE PROJECT. A SHARED INTEREST IN MAKING
+              THREE DESIGNERS,
+             ONE PROJECT. 
+             <br />A SHARED INTEREST IN MAKING
               MEANINGFUL DESIGN.
             </p>
           </div>
@@ -1145,8 +1327,8 @@ useEffect(() => setShareState("idle"), [leather, twine])
   RESET TO DEFAULT ↺
 </button>
 
-              <div className="visualiser-actions">
-  <button className="text-link" onClick={() => goTo("/contact")}>
+    <div className="visualiser-actions">
+  <button className="make-your-own-link" onClick={() => goTo("/contact")}>
     ENQUIRE <InlineArrow />
   </button>
 </div>

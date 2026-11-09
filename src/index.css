@@ -373,6 +373,7 @@ p {
   grid-template-columns: 1.04fr 0.96fr;
   min-height: unset;
   align-items: start;
+  
 }
 
 .product.reverse .product-image {
@@ -872,6 +873,8 @@ textarea:focus {
   white-space: nowrap;
 }
 
+
+
 .inline-arrow {
   display: inline-block;
   width: auto;
@@ -1144,7 +1147,7 @@ dd {
 }
 
 .team {
-  padding: 84px 5vw 110px;
+  padding: 30px 5vw 65px;
 }
 
 .team-heading {
@@ -1170,8 +1173,8 @@ dd {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(32px, 4.5vw, 72px);
-  width: min(100%, 1240px);
-  margin: 64px auto 0;
+  width: 100%;
+  margin: 64px 0 0;
   align-items: start;
 }
 
@@ -1210,14 +1213,18 @@ dd {
 }
 
 .team-member div > p {
-  max-width: 32ch;
+  width: 100%;
+  max-width: 100%;
   margin: 0;
   font-size: var(--type-sub-body);
   line-height: 1.7;
 }
 
 /* Visualiser */
-.visualiser-page,
+.visualiser-page {
+  min-height: 0;
+}
+
 .contact-page {
   min-height: calc(100dvh - 88px);
 }
@@ -1232,7 +1239,7 @@ dd {
   column-gap: clamp(48px, 6vw, 96px);
   width: min(100%, 1500px);
   margin: 0 auto;
-  padding: 55px 6.5vw 70px;
+  padding: 55px 6.5vw 30px;
 }
 
 .visualiser-controls {
@@ -1255,7 +1262,7 @@ dd {
 
 .visualiser-controls h1 {
   max-width: 420px;
-  margin-bottom: 46px;
+  margin-bottom: 50px;
 }
 
 .object-toggle {
@@ -1820,10 +1827,10 @@ min-height: clamp(300px, 32vh, 380px);
   align-items: center;
   padding-top: 95px;
 }
-  .approach-intro h2 {
-    margin: 42px 0 24px;
-    font-size: 58px;
-  }
+ .approach-intro h2 {
+  margin: 20px 0 24px;
+  font-size: 58px;
+}
 
   .approach-intro > p:last-child {
     margin-top: 0;
@@ -1896,7 +1903,7 @@ min-height: clamp(300px, 32vh, 380px);
   .visualiser-layout,
   .contact-layout {
     display: block;
-    padding: 42px 18px 70px;
+    padding: 42px 18px 30px;
   }
 
   .visualiser-layout {
@@ -2005,24 +2012,19 @@ min-height: clamp(300px, 32vh, 380px);
 .making-videos {
   padding: 118px 5vw 132px;
   overflow: hidden;
-  border-top: 1px solid var(--rule);
+
 }
 
-.making-videos-heading {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  align-items: end;
-  gap: 8vw;
-  margin-bottom: 58px;
-}
+@media (max-width: 800px) {
+  .making-videos-heading {
+    display: block;
+    margin-bottom: 36px;
+  }
 
-.making-videos-heading h2 {
-  margin: 34px 0 0;
-  font-family: "Big Shoulders Display:SemiBold", Impact, sans-serif;
-  font-size: clamp(58px, 7vw, 96px);
-  font-weight: 600;
-  line-height: 0.86;
-  letter-spacing: -0.04em;
+  .making-videos-heading h2 {
+    margin: 0;
+    font-size: clamp(54px, 14vw, 76px);
+  }
 }
 
 .making-videos-intro {
@@ -2150,11 +2152,13 @@ min-height: clamp(300px, 32vh, 380px);
     margin-bottom: 36px;
   }
 
-  .making-videos-heading h2 {
-    margin-top: 26px;
-    font-size: clamp(54px, 14vw, 76px);
-  }
+making-videos-heading .eyebrow {
+  margin-bottom: 0;
+}
 
+.making-videos-heading h2 {
+  margin-top: 0px;
+}
   .making-videos-intro {
     max-width: 42ch;
     margin: 25px 0 0;
@@ -2209,6 +2213,8 @@ min-height: clamp(300px, 32vh, 380px);
   line-height: 1.8;
   color: var(--type-body-color);
 }
+
+
 
 /* Making principles — simple editorial list */
 .approach-principles {
@@ -2275,119 +2281,10 @@ min-height: clamp(300px, 32vh, 380px);
 
 
 
-@media (max-width: 800px) {
-  .about-page {
-    padding-top: 35px;
-  }
-
-  .about-story {
-    gap: 34px;
-    padding-bottom: 65px;
-  }
-
-  .about-story-copy {
-    max-width: 100%;
-  }
-
-  .about-story .lead,
-  .story-continuation {
-    font-size: 12px;
-    line-height: 1.8;
-  }
-
-  .about-approach {
-    row-gap: 35px;
-    padding: 45px 18px 65px;
-  }
-
-  .approach-intro h2 {
-    margin: 32px 0 22px;
-  }
-
-  .approach-intro > p:last-child {
-    font-size: 12px;
-    line-height: 1.8;
-  }
-
-  .approach-principles {
-    padding-top: 0;
-  }
-
-  .approach-item {
-    padding: 19px 0;
-  }
-
-  .approach-content {
-    margin-left: 44px;
-    font-size: 11px;
-  }
-
-  .team {
-    padding: 50px 18px 65px;
-  }
-
-  .team-grid {
-    gap: 42px;
-    margin-top: 32px;
-  }
-
-  .team-portrait {
-    width: 68%;
-    max-width: 250px;
-  }
-
-  .team-member > div:last-child {
-    margin-top: 14px;
-  }
-
-  .team-member h3 {
-    font-size: 34px;
-  }
-    /* Visualiser mobile sizing */
-  .visualiser-canvas {
-    min-height: 380px;
-    overflow: hidden;
-  }
-
- .table-render-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transform: scale(1.6);
-}
-}
-
-/* Team section – larger portraits with left-aligned text */
-.team-grid {
-  justify-items: stretch;
-}
-
-.team-member {
-  align-items: stretch;
-  text-align: left;
-}
-
-.team-portrait {
-  width: 100%;
-  max-width: none;
-  margin: 0;
-}
-
-.team-member > div:last-child {
-  width: 100%;
-  max-width: 330px;
-  margin: 20px 0 0;
-}
-
-.team-member div > p {
-  max-width: none;
-  width: 100%;
-  margin: 0;
-  font-size: var(--type-sub-body);
-  line-height: 1.7;
-}
+  
 
 /* Mobile */
+
 @media (max-width: 800px) {
   .team-member {
     align-items: stretch;
@@ -2406,7 +2303,7 @@ min-height: clamp(300px, 32vh, 380px);
 
   .team-member > div:last-child {
     width: 100%;
-    max-width: 330px;
+    max-width: 100%;
     margin: 18px 0 0;
   }
 }
@@ -2433,6 +2330,8 @@ min-height: clamp(300px, 32vh, 380px);
 .reset-button:hover {
   color: #111;
 }
+
+
 
 /* =================================
    COFFEE TABLE — PROCESS GALLERY
@@ -2528,9 +2427,14 @@ min-height: clamp(300px, 32vh, 380px);
     padding: 75px 18px 70px;
   }
 
-  .process-gallery-slide {
-    flex: 0 0 80%;
-  }
+  .process-gallery-track {
+  gap: 0;
+}
+
+.process-gallery-slide {
+  flex: 0 0 100%;
+  width: 100%;
+}
 }
 .process-gallery-heading h2 {
   margin: 62px 0 20px;
@@ -2621,7 +2525,6 @@ min-height: clamp(300px, 32vh, 380px);
 
 .about-making {
   padding: 110px 5vw 120px;
-  border-top: 1px solid var(--rule);
 }
 
 .making-intro {
@@ -2906,7 +2809,26 @@ min-height: clamp(300px, 32vh, 380px);
 }
 
 @media (max-width: 768px) {
-  .making-carousel {
+  .about-making {
+    display: flex;
+    flex-direction: column;
+    padding: 45px 18px 85px;
+    border-top: none;
+  }
+.about-making .making-slide video {
+  width: 100%;
+}
+  .process-gallery {
+    padding-bottom: 35px;
+  }
+
+  .about-making .approach-intro {
+    order: 0;
+  }
+
+  .about-making .making-carousel {
+    order: 1;
+    width: 100%;
     margin-top: 2rem;
   }
 }
@@ -3018,5 +2940,195 @@ min-height: clamp(300px, 32vh, 380px);
     order: 1;
     width: 100%;
     margin-top: 2rem;
+  }
+}
+
+.make-your-own-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 52px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 5px;
+  transition: opacity 0.2s ease;
+}
+
+.make-your-own-link:hover {
+  opacity: 0.55;
+}
+
+.reset-button {
+  text-decoration: none;
+}
+
+.reset-button::after {
+  display: none;
+}
+
+
+/* MOBILE — ABOUT PAGE SECTION SPACING */
+
+@media (max-width: 800px) {
+  .about-story {
+    padding-bottom: 30px;
+  }
+
+  .about-approach {
+    padding-top: 25px;
+    padding-bottom: 30px;
+  }
+
+  .team {
+    padding-top: 25px;
+  }
+}
+
+/* CONSISTENT EYEBROW SPACING */
+
+.eyebrow + h1,
+.eyebrow + h2,
+.eyebrow + h3 {
+  margin-top: 16px !important;
+}
+
+.approach-intro strong {
+  font-family: "DM Mono:Medium", monospace;
+  font-weight: 500;
+}
+
+.coffee-lifestyle-gallery {
+  position: relative;
+  width: 100%;
+  padding: 65px 5vw 85px;
+}
+
+.coffee-lifestyle-track {
+  display: flex;
+  width: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.coffee-lifestyle-track::-webkit-scrollbar {
+  display: none;
+}
+
+.coffee-lifestyle-slide {
+  flex: 0 0 100%;
+  min-width: 100%;
+  scroll-snap-align: start;
+}
+
+.coffee-lifestyle-slide img {
+  display: block;
+  width: 100%;
+  height: 680px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.coffee-lifestyle-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  color: #222;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coffee-lifestyle-arrow.previous {
+  left: calc(5vw + 15px);
+}
+
+.coffee-lifestyle-arrow.next {
+  right: calc(5vw + 15px);
+}
+
+.coffee-lifestyle-counter {
+  display: block;
+  text-align: right;
+  margin-top: 12px;
+  font-size: 11px;
+}
+
+@media (max-width: 800px) {
+  .coffee-lifestyle-gallery {
+  padding: 45px 0 60px;
+}
+@media (max-width: 800px) {
+  .coffee-lifestyle-counter {
+    padding-right: 12px;
+    box-sizing: border-box;
+  }
+}
+.coffee-lifestyle-gallery {
+  padding-top: 20px;
+}
+
+  .coffee-lifestyle-slide img {
+    height: 340px;
+  }
+
+  .coffee-lifestyle-arrow.previous {
+    left: 22px;
+  }
+
+  .coffee-lifestyle-arrow.next {
+    right: 22px;
+  }
+}
+
+@media (max-width: 800px) {
+  .product#coffee-table {
+    padding-bottom: 0;
+  }
+
+  .coffee-lifestyle-gallery {
+    padding-top: 0;
+    margin-top: -20px;
+  }
+}
+
+/* Origami Lamp lifestyle carousel — desktop */
+@media (min-width: 801px) {
+  .lamp-lifestyle-gallery .coffee-lifestyle-slide {
+    height: 620px;
+    overflow: hidden;
+  }
+
+  .lamp-lifestyle-gallery .coffee-lifestyle-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: none;
+  }
+}
+
+@media (max-width: 800px) {
+  .lamp-lifestyle-gallery {
+    padding-top: 0 !important;
+    margin-top: -150px !important;
+  }
+}
+
+@media (max-width: 800px) {
+  .coffee-lifestyle-gallery:not(.lamp-lifestyle-gallery) {
+    margin-top: -100px !important;
+    padding-top: 0 !important;
   }
 }
