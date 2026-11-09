@@ -874,7 +874,6 @@ manufacturing.
 To be used as a stand for reading large coffee table books in a cosy lounge room.
 "
         />
-<CoffeeLifestyleGallery />
 
 
         <ProductSection
@@ -884,7 +883,7 @@ To be used as a stand for reading large coffee table books in a cosy lounge room
           reverse
           description="Inspired by the traditional art of origami, this reading lamp transforms folded aluminium into a sculptural form that balances light and function. Combining contemporary manufacturing with traditional craft techniques, its considered structure creates adaptable ambient and focused reading light. Visible folds and material details celebrate the beauty of its construction."
         />
-        <LampLifestyleGallery />
+      
       </main>
       <Footer />
     </>
